@@ -5,13 +5,16 @@ import GameSuccess from './components/GameSuccess';
 import John_3_30 from './game/John_3_30/John_3_30';
 import { verses } from './data/verses';
 import FillInTheBlanks from './components/FillInTheBlanks';
+import FIBSuccess from './components/FIBSuccess';
 
 export default function App() {
   const activeVerse = verses[0];
 
-  const [showSuccess, setShowSuccess] = useState(false);
   // Track the current step of the level ('graphics' or 'blanks')
-  const [stage, setStage] = useState('graphics'); 
+  const [stage, setStage] = useState('graphics');
+  
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showFIBSuccess, setShowFIBSuccess] = useState(false);
 
   // Triggered when the graphics game registers success
   const handleGraphicsSuccess = () => {
@@ -22,6 +25,11 @@ export default function App() {
   const handleNextStage = () => {
     setShowSuccess(false); 
     setStage('blanks');
+  };
+
+  // Fill in the Blanks Success Handler
+  const handleFIBSuccess = () => {
+    setShowFIBSuccess(true);
   };
 
   // Determine header title based on active stage
@@ -36,13 +44,18 @@ export default function App() {
         <John_3_30 onSuccess={handleGraphicsSuccess} />
       ) : (
         <div style={appStyles}>
-          <FillInTheBlanks verse={activeVerse} />
+          <FillInTheBlanks verse={activeVerse} onSuccess={handleFIBSuccess}/>
         </div>
       )}
 
-      {/* Success Popup */}
+      {/* Interactive graphics game Success Popup */}
       {showSuccess && (
         <GameSuccess onNext={handleNextStage} />
+      )}
+
+      {/* Fill in the Blanks Success Popup */}
+      {showFIBSuccess && (
+        <FIBSuccess />
       )}
     </GameLayout>
   );

@@ -1,7 +1,7 @@
 // src/components/FillInTheBlanks.jsx
 import React, { useEffect, useRef, useState } from "react";
 
-export default function FillInTheBlanks({ verse }) {
+export default function FillInTheBlanks({ verse, onSuccess }) {
   // Extract the words inside {} which are the answer keys to the blanks.
   const segments = verse ? verse.text.split(/\{[^{}]+\}/) : [];
   const blanks = verse ? [...verse.text.matchAll(/\{([^{}]+)\}/g)].map(match => match[1]) : [];
@@ -25,9 +25,20 @@ export default function FillInTheBlanks({ verse }) {
   }, [verse, blanks.length]);
 
   const handleInputChange = (index, value) => {
+    // 1. Create a fresh copy of the current inputs and apply the newly typed character/word
     const nextInputs = [...inputs];
     nextInputs[index] = value;
     setInputs(nextInputs);
+
+    // 2. Perform a case-insensitive, trimmed comparison across all blanks
+    const allMatched = nextInputs.every(
+      (input, idx) => input.trim().toLowerCase() === blanks[idx].toLowerCase()
+    );
+
+    // 3. If every input matches its corresponding blank, immediately trigger the success callback
+    if (allMatched && onSuccess) {
+      onSuccess();
+    }
   };
 
   if (!verse) {
@@ -117,7 +128,7 @@ const styles = {
     marginTop: "1rem",
   },
   link: {
-    color: "#FFFFFF",
+    color: "#58a6ff",
     textDecoration: "underline",
     textUnderlineOffset: "4px",
   },
