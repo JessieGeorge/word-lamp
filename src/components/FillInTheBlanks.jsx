@@ -36,8 +36,6 @@ export default function FillInTheBlanks({ verse }) {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Fill in the blanks</h1>
-      
       <div style={styles.verseContainer}>
         {segments.map((segment, index) => (
           <span key={index}>
@@ -76,28 +74,29 @@ export default function FillInTheBlanks({ verse }) {
 
 const styles = {
   container: {
-    backgroundColor: "#000000",
-    color: "#FFFFFF",
-    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    padding: "2rem",
     textAlign: "center",
+    width: "100%",
+    fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+  },
+  header: {
+    textAlign: 'center',
+    marginBottom: '40px',
   },
   title: {
-    fontSize: "2.5rem",
-    fontWeight: "700",
-    margin: "0 0 2rem 0",
-    color: "#FFFFFF",
-    letterSpacing: "-0.03em",
+    fontSize: '2rem',
+    fontWeight: '600',
+    color: '#FFFFFF',           
+    margin: 0,
   },
   verseContainer: {
     fontSize: "1.5rem",
     lineHeight: "2.2",
     marginBottom: "1.5rem",
-    maxWidth: "800px",
+    maxWidth: "600px",
   },
   input: {
     background: "transparent",
@@ -110,6 +109,7 @@ const styles = {
     margin: "0 8px",
     outline: "none",
     padding: "0 4px",
+    fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
   },
   referenceContainer: {
     fontSize: "1.2rem",
@@ -120,7 +120,6 @@ const styles = {
     color: "#FFFFFF",
     textDecoration: "underline",
     textUnderlineOffset: "4px",
-    transition: "opacity 0.2s ease",
   },
   error: {
     color: "#FF3333",

@@ -1,11 +1,11 @@
 // src/components/GameLayout.jsx
 import React from 'react';
 
-export default function GameLayout({ children }) {
+export default function GameLayout({ children, title = "Interact with the Bible verse" }) {
   return (
     <div style={styles.container}>
       <header style={styles.header}>
-        <h1 style={styles.title}>Interact with the Bible verse</h1>
+        <h1 style={styles.title}>{title}</h1>
       </header>
       
       {/* This is where the interactive graphics for each Bible verse will render */}

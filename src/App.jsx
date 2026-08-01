@@ -24,8 +24,13 @@ export default function App() {
     setStage('blanks');
   };
 
+  // Determine header title based on active stage
+  const currentTitle = stage === 'graphics' 
+    ? "Interact with the Bible verse" 
+    : "Fill in the blanks";
+
   return (
-    <GameLayout>
+    <GameLayout title={currentTitle}>
       {/* Conditionally render either the graphics game or the fill-in-the-blanks board */}
       {stage === 'graphics' ? (
         <John_3_30 onSuccess={handleGraphicsSuccess} />
