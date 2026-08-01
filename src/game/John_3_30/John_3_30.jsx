@@ -1,8 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 export default function John_3_30() {
   const [heScaleY, setHeScaleY] = useState(1.0);
   const [iScale, setIScale] = useState(1.0);
+
+  // Refs to track vertical distance and starting scale of "He"
+  const heStartDistanceY = useRef(0);
+  const heStartScaleY = useRef(1.0);
+
+  // Refs to track diagonal distance and starting scale of "i"
+  const iStartDistance = useRef(0);
+  const iStartScale = useRef(1.0);
+
+  const handleHeTouchStart = (e) => {
+    if (e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      // Calculate starting vertical distance between two fingers
+      heStartDistanceY.current = Math.abs(touch1.clientY - touch2.clientY);
+      heStartScaleY.current = heScaleY;
+    }
+  };
+
+  const handleHeTouchMove = (e) => {
+    if (e.touches.length === 2 && heStartDistanceY.current > 0) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const currentDistanceY = Math.abs(touch1.clientY - touch2.clientY);
+      
+      // Calculate how much the fingers have stretched apart
+      const ratio = currentDistanceY / (heStartDistanceY.current || 1);
+      
+      // Limit stretch scale between 1.0 (normal) and 2.5 (tall)
+      const newScale = Math.max(1.0, Math.min(heStartScaleY.current * ratio, 2.5));
+      setHeScaleY(newScale);
+    }
+  };
+
+  const handleHeTouchEnd = () => {
+    heStartDistanceY.current = 0; // Reset
+  };
+
+  const handleITouchStart = (e) => {
+    if (e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      // Calculate starting diagonal distance using the Pythagorean theorem
+      iStartDistance.current = Math.hypot(
+        touch1.clientX - touch2.clientX,
+        touch1.clientY - touch2.clientY
+      );
+      iStartScale.current = iScale;
+    }
+  };
+
+  const handleITouchMove = (e) => {
+    if (e.touches.length === 2 && iStartDistance.current > 0) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const currentDistance = Math.hypot(
+        touch1.clientX - touch2.clientX,
+        touch1.clientY - touch2.clientY
+      );
+      
+      // Calculate the scale ratio
+      const ratio = currentDistance / (iStartDistance.current || 1);
+      
+      // Limit scale: Pinching shrinks it down to 0.3 minimum, maxes out at 1.0
+      const newScale = Math.max(0.3, Math.min(iStartScale.current * ratio, 1.0));
+      setIScale(newScale);
+    }
+  };
+
+  const handleITouchEnd = () => {
+    iStartDistance.current = 0; // Reset
+  };
+
 
   return (
     <div style={styles.container}>
@@ -10,10 +83,14 @@ export default function John_3_30() {
         
         {/* Left Side: "He" */}
         <div 
+          onTouchStart={handleHeTouchStart}
+          onTouchMove={handleHeTouchMove}
+          onTouchEnd={handleHeTouchEnd}
           style={{
             ...styles.elementWrapper,
             transform: `scaleY(${heScaleY})`,
             transformOrigin: 'center', 
+            touchAction: 'none', // Prevents browser scrolling during gesture
           }}
         >
           <span style={styles.arrow}>↕</span>
@@ -22,10 +99,14 @@ export default function John_3_30() {
 
         {/* Right Side: Stick figure representing "i" */}
         <div 
+          onTouchStart={handleITouchStart}
+          onTouchMove={handleITouchMove}
+          onTouchEnd={handleITouchEnd}
           style={{
             ...styles.elementWrapper,
             transform: `scale(${iScale})`,
             transformOrigin: 'bottom center',
+            touchAction: 'none'
           }}
         >
           <svg width="80" height="150" viewBox="0 0 60 110" stroke="white" strokeWidth="4" fill="none">
@@ -38,12 +119,6 @@ export default function John_3_30() {
           </svg>
         </div>
 
-      </div>
-      
-      {/* Test Buttons */}
-      <div style={styles.controls}>
-        <button style={styles.btn} onClick={() => setHeScaleY(prev => Math.min(prev + 0.2, 2.5))}>Stretch He</button>
-        <button style={styles.btn} onClick={() => setIScale(prev => Math.max(prev - 0.1, 0.3))}>Pinch i</button>
       </div>
     </div>
   );
