@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
-export default function John_3_30() {
+export default function John_3_30({ onSuccess }) {
   const [heScaleY, setHeScaleY] = useState(1.0);
   const [iScale, setIScale] = useState(1.0);
 
@@ -11,6 +11,13 @@ export default function John_3_30() {
   // Refs to track diagonal distance and starting scale of "i"
   const iStartDistance = useRef(0);
   const iStartScale = useRef(1.0);
+
+  // Monitor scale changes. Trigger onSuccess when targets are hit.
+  useEffect(() => {
+    if (heScaleY >= 2.5 && iScale <= 0.3) {
+      onSuccess();
+    }
+  }, [heScaleY, iScale, onSuccess]);
 
   const handleHeTouchStart = (e) => {
     if (e.touches.length === 2) {
