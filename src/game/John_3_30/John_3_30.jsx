@@ -14,7 +14,7 @@ export default function John_3_30({ onSuccess }) {
 
   // Monitor scale changes. Trigger onSuccess when targets are hit.
   useEffect(() => {
-    if (heScaleY >= 2.5 && iScale <= 0.3) {
+    if (heScaleY >= 2.5 && iScale <= 0.5) {
       onSuccess();
     }
   }, [heScaleY, iScale, onSuccess]);
@@ -73,8 +73,8 @@ export default function John_3_30({ onSuccess }) {
       // Calculate the scale ratio
       const ratio = currentDistance / (iStartDistance.current || 1);
       
-      // Limit scale: Pinching shrinks it down to 0.3 minimum, maxes out at 1.0
-      const newScale = Math.max(0.3, Math.min(iStartScale.current * ratio, 1.0));
+      // Limit scale: Pinching shrinks it down to 0.5 minimum, maxes out at 1.0
+      const newScale = Math.max(0.5, Math.min(iStartScale.current * ratio, 1.0));
       setIScale(newScale);
     }
   };
